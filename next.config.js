@@ -1,6 +1,17 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-}
+const withBuilderDevTools = require("@builder.io/dev-tools/next")();
 
-module.exports = nextConfig
+/** @type {import('next').NextConfig} */
+const nextConfig = withBuilderDevTools({
+  images: {
+    domains: ["cdn.builder.io", "cdn.pixabay.com"],
+  },
+
+  webpack: (config) => {
+    config.externals = (config.externals || []).concat("vm2");
+    config.experiments = { ...config.experiments, topLevelAwait: true };
+
+    return config;
+  },
+});
+
+module.exports = nextConfig;
